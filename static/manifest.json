@@ -1,0 +1,27 @@
+{
+  "name": "Tech4Today: Technical Intelligence",
+  "short_name": "Tech4Today",
+  "description": "High-velocity technical intelligence and pulse detection for the next generation of builders.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#0a84ff",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/static/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["news", "technology", "productivity"],
+  "screenshots": [
+    {
+      "src": "/static/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
+}

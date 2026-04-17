@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime 30 | Fastest No-BS Tech News</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=6.0">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            overflow: hidden; 
+            margin: 0; 
+            background: #000; 
+            height: 100vh;
+        }
+        .pulse-deck {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+        }
+        .pulse-deck::-webkit-scrollbar { display: none; }
+        
+        .slide {
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            box-sizing: border-box;
+            background-size: cover;
+            background-position: center;
+            background-color: #1a1a1a; /* Fallback Color */
+        }
+
+        .slide-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.8) 100%);
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 10;
+            max-width: 600px;
+            color: #fff;
+            text-align: left;
+        }
+
+        .slide-title {
+            font-family: 'Outfit';
+            font-size: 2.2rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            letter-spacing: -0.05em;
+        }
+
+        .slide-vibe {
+            font-size: 1.35rem;
+            line-height: 1.4;
+            font-weight: 600;
+            color: #fff;
+            background: rgba(0,122,255,0.2);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(0,122,255,0.4);
+            margin-bottom: 3rem;
+        }
+
+        .slide-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            opacity: 0.7;
+        }
+
+        /* Progress Bar */
+        .deck-progress {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            right: 2rem;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            z-index: 1000;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #007aff;
+            width: 0%;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .exit-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 99px;
+            font-weight: 900;
+            font-size: 0.8rem;
+            cursor: pointer;
+            z-index: 1000;
+            text-decoration: none;
+        }
+
+        .finish-screen {
+            background: #007aff;
+            color: #fff;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="deck-progress">
+        <div id="p-bar" class="progress-fill"></div>
+    </div>
+
+    <a href="/" class="exit-btn">ABORT PRIME</a>
+
+    <div class="pulse-deck" id="deck">
+        {% for article in articles %}
+        <div class="slide" style="background-image: url('{{ article.thumbnail }}');" data-index="{{ loop.index }}">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+                <div class="slide-meta" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <img src="https://icons.duckduckgo.com/ip3/{{ article.domain }}.ico" 
+                             onerror="this.src='https://www.google.com/s2/favicons?domain={{ article.domain }}&sz=32';"
+                             style="width: 20px; height: 20px; border-radius: 50%;">
+                        <span>{{ article.source|upper }}</span>
+                    </div>
+                    <span>{{ article.sentiment }}</span>
+                </div>
+                <h2 class="slide-title">{{ article.title }}</h2>
+                <div class="slide-vibe">
+                    {{ article.vibe_summary if article.vibe_summary else (article.summary if article.summary else 'Pulse extraction pending...') }}
+                </div>
+                <div class="slide-meta">
+                    <span>{{ loop.index }} OF 15 PULSES</span>
+                    <span>30SEC READ</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Automatic Return Slide -->
+        <div class="slide finish-screen" id="finish-slide">
+            <div class="slide-content" style="text-align: center;">
+                <h2 class="slide-title" style="font-size: 4rem;">LOOP COMPLETE</h2>
+                <p style="font-size: 1.5rem; font-weight: 800; opacity: 0.8; margin-bottom: 3rem;">YOUR INTELLIGENCE IS REFRESHED</p>
+                <div id="timer-text" style="font-weight: 900; font-size: 1rem;">RETURNING HOME IN 3s...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const deck = document.getElementById('deck');
+        const pBar = document.getElementById('p-bar');
+        const total = 15;
+
+        deck.addEventListener('scroll', () => {
+            const index = Math.round(deck.scrollTop / window.innerHeight) + 1;
+            const progress = (index / (total + 1)) * 100;
+            pBar.style.width = progress + '%';
+
+            // Auto-Return Logic
+            if (index > total) {
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 3000);
+            }
+        });
+
+        // Prevention of accidental swipe up on first slide
+        deck.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown') deck.scrollBy(0, window.innerHeight);
+            if (e.key === 'ArrowUp') deck.scrollBy(0, -window.innerHeight);
+        });
+    </script>
+</body>
+</html>

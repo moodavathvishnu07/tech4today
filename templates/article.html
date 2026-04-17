@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ article.title }} | Tech4Today Tech Pulse</title>
+    <meta name="description" content="{{ article.seo_description }}">
+    <link rel="canonical" href="{{ article.canonical_url }}" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ article.canonical_url }}">
+    <meta property="og:title" content="{{ article.title }}">
+    <meta property="og:description" content="{{ article.seo_description }}">
+    <meta property="og:image" content="{{ request.host_url.rstrip('/') }}/api/share-image/{{ article.id }}">
+    <meta property="og:image:width" content="1080">
+    <meta property="og:image:height" content="1920">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ article.canonical_url }}">
+    <meta property="twitter:title" content="{{ article.title }}">
+    <meta property="twitter:description" content="{{ article.seo_description }}">
+    <meta property="twitter:image" content="{{ request.host_url.rstrip('/') }}/api/share-image/{{ article.id }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=6.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+    <script>
+        // FORCED DARK MODE DEFAULT
+        const savedTheme = localStorage.getItem('codly-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // High-End Shrinking Header
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('shrinking-header');
+            if (window.scrollY > 100) {
+                header.classList.add('header-shrunk');
+            } else {
+                header.classList.remove('header-shrunk');
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+             if (localStorage.getItem('codly-vibe') === 'on') {
+                 document.body.classList.add('vibe-active');
+             }
+        });
+    </script>
+</head>
+<body>
+    <div id="shrinking-header" class="reader-header">
+        <div style="max-width: 900px; margin: 0 auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <a href="/" style="text-decoration: none; color: var(--accent-blue); font-weight: 800; font-size: 0.9rem;">← RETURN HUB</a>
+                <span class="vibe-badge" style="background: rgba(255,255,255,0.05);">{{ article.sentiment | default('⚖️ Neutral') }}</span>
+            </div>
+            <h1 class="shrinking-title">Tech<span>4</span>Today | No-BS</h1>
+            <h1 class="shrinking-title" style="margin-top: 2rem; font-size: 2.5rem; line-height: 1.1;">{{ article.title }}</h1>
+            <div class="article-meta" style="margin-top: 1rem; opacity: 0.8; font-size: 0.8rem; font-weight: 800; display: flex; align-items: center; gap: 0.8rem;">
+                <img src="https://icons.duckduckgo.com/ip3/{{ article.domain }}.ico" 
+                     onerror="this.src='https://www.google.com/s2/favicons?domain={{ article.domain }}&sz=32';"
+                     class="source-icon">
+                <span>{{ article.source }}</span>
+                <span>• {{ article.reading_time }} MIN READ</span>
+                <span style="color: var(--accent-blue);">• UPLOADED {{ article.time_ago }}</span>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="share-btn" onclick="openShareModal(event, '{{ article.id }}', '{{ article.title|safe }}', '{{ article.thumbnail }}')">
+                    🚀 SHARE IMAGE CARD
+                </button>
+                <a href="{{ article.link }}" target="_blank" class="share-btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                    🌐 SOURCE PULSE
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <main class="mag-content">
+        <div class="hero-image" style="background-image: url('{{ article.thumbnail }}');"></div>
+        
+        <div class="report-body">
+            <!-- TL;DR (What happened) -->
+            <section class="content-block standard-summary">
+                <h2 style="font-size: 1rem; color: var(--accent-blue); text-transform: uppercase; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: 0.05em;">TL;DR: What Happened</h2>
+                <p style="font-size: 1.4rem; color: var(--text-primary); line-height: 1.5; font-weight: 500; border-left: 4px solid var(--accent-blue); padding-left: 1.5rem;">
+                    {{ article.summary if article.summary else 'Pulse extraction pending...' }}
+                </p>
+                
+                <div style="margin-top: 3rem; display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; padding: 2rem; background: rgba(255,255,255,0.03); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 700;">DEEP-DIVE INTO THE RAW INTELLIGENCE</p>
+                    <a href="{{ article.link }}" target="_blank" class="share-btn" style="text-decoration: none; color: white; background: var(--accent-blue); padding: 0.8rem 1.5rem; font-size: 0.9rem; font-weight: 800; text-transform: uppercase;">
+                        🌐 Read on {{ article.source }}
+                    </a>
+                </div>
+            </section>
+            
+            <section class="content-block vibe-summary" style="display: none;">
+                <div style="padding: 2rem; background: var(--accent-blue); color: #fff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,122,255,0.4);">
+                    <h2 style="font-size: 0.9rem; margin-bottom: 1.5rem; opacity: 0.8; font-weight: 800; text-transform: uppercase;">TL;DR VIBE CHECK</h2>
+                    <p style="font-size: 1.5rem; line-height: 1.4; font-weight: 700;">{{ article.vibe_summary if article.vibe_summary else (article.summary if article.summary else 'Pulse extraction pending...') }}</p>
+                </div>
+            </section>
+
+            <!-- Why It Matters -->
+            <section class="content-block" style="margin: 4rem 0;">
+                <h2 style="font-size: 1rem; color: var(--accent-blue); text-transform: uppercase; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: 0.05em;">Why It Matters</h2>
+                <div style="background: var(--bg-card); padding: 2.5rem; border-radius: 16px; border: 1px solid var(--border-google);">
+                    <p style="font-size: 1.2rem; line-height: 1.6; font-weight: 500; color: var(--text-primary);">{{ article.why }}</p>
+                </div>
+            </section>
+
+            <!-- Key Points -->
+            <section class="content-block">
+                <h2 style="font-size: 1rem; color: var(--accent-blue); text-transform: uppercase; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: 0.05em;">Key Points</h2>
+                <ul style="list-style: none; padding: 0;">
+                    {% for point in article.points %}
+                        <li style="position: relative; padding-left: 2.5rem; margin-bottom: 1.5rem; font-size: 1.15rem; line-height: 1.5; font-weight: 500; color: var(--text-primary);">
+                            <span style="position: absolute; left: 0; color: var(--accent-blue); font-weight: 900; font-size: 1.2rem;">→</span>
+                            {{ point }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </div>
+    </main>
+
+    <footer style="padding: 10rem 5%; border-top: 1px solid var(--border-google); text-align: center; opacity: 0.5;">
+        <div style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase;">TECH4TODAY | THE NO-BS TECH HUB · BUILD 7.0</div>
+    </footer>
+
+    <!-- SHARED MODAL LOGIC -->
+    <div id="share-modal" class="modal-overlay" onclick="closeShareModal(event);">
+        <div class="modal-content" onclick="event.stopPropagation();">
+            <div class="modal-header">
+                <h3>Share Intelligence Card</h3>
+                <button class="close-modal" onclick="closeShareModal(event);">✕</button>
+            </div>
+            <div class="share-preview">
+                <div id="share-loader" class="loader-spinner"></div>
+                <img id="share-img-preview" src="" alt="Share Card Preview" style="display: none;">
+            </div>
+            <div class="share-options">
+                <button class="share-option-btn wh" onclick="shareToWhatsApp();">WhatsApp Link</button>
+                <button class="share-option-btn tw" onclick="shareToTwitter();">Post to X</button>
+                <button class="share-option-btn ig" style="background: var(--accent-blue); grid-column: span 2; font-size: 1rem; border: 2px solid #fff;" onclick="shareToNative();">🚀 SHARE FULL IMAGE CARD</button>
+                <button class="share-option-btn dl" onclick="downloadShareImg();">Download JPG</button>
+            </div>
+            <p id="share-status" style="font-size: 0.7rem; color: var(--text-secondary); text-align: center; margin-top: 1rem;"></p>
+            <p style="font-size: 0.65rem; color: var(--accent-blue); text-align: center; font-weight: 800; text-transform: uppercase; margin-top: 0.5rem; opacity: 0.9;">💡 Hint: Use the "🚀 SHARE FULL IMAGE" button to send the actual JPG to WhatsApp</p>
+        </div>
+    </div>
+
+    <script>
+        let currentShareData = { id: null, title: '', thumb: '' };
+
+        function openShareModal(e, id, title, thumb) {
+            e.stopPropagation();
+            currentShareData = { id, title, thumb };
+            const modal = document.getElementById('share-modal');
+            const preview = document.getElementById('share-img-preview');
+            const loader = document.getElementById('share-loader');
+            const status = document.getElementById('share-status');
+            
+            modal.style.display = 'flex';
+            preview.style.display = 'none';
+            loader.style.display = 'block';
+            status.innerText = "Generating Intelligence Card...";
+
+            const imgUrl = `/api/share-image/${id}`;
+            const img = new Image();
+            img.onload = () => {
+                preview.src = imgUrl;
+                preview.style.display = 'block';
+                loader.style.display = 'none';
+                status.innerText = "Ready to share";
+            };
+            img.src = imgUrl;
+        }
+
+        // v15.0 Global Shortcuts
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeShareModal();
+        });
+
+        function closeShareModal() {
+            const modal = document.getElementById('share-modal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        async function shareToNative() {
+            const imgUrl = `/api/share-image/${currentShareData.id}`;
+            const canonicalUrl = `${window.location.origin}/news/${currentShareData.id}`;
+            const status = document.getElementById('share-status');
+            
+            try {
+                if (navigator.canShare && navigator.share) {
+                    status.innerText = "Preparing High-Fidelity Card...";
+                    const response = await fetch(imgUrl);
+                    const blob = await response.blob();
+                    const file = new File([blob], `tech4today_pulse_${currentShareData.id}.jpg`, { type: 'image/jpeg' });
+                    
+                    await navigator.share({
+                        files: [file],
+                        title: currentShareData.title,
+                        text: `${currentShareData.title}\n\nTrack this pulse: ${canonicalUrl}`,
+                        url: canonicalUrl
+                    });
+                    status.innerText = "Shared successfully!";
+                } else {
+                    status.innerText = "Direct sharing not supported. Use WhatsApp Link or Download.";
+                }
+            } catch (err) {
+                console.error(err);
+                status.innerText = "Sharing cancelled or failed.";
+            }
+        }
+
+        function shareToWhatsApp() {
+            const url = window.location.origin + '/news/' + currentShareData.id;
+            const text = encodeURIComponent(currentShareData.title + "\n\nTrack this pulse: " + url);
+            window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+        }
+
+        function shareToTwitter() {
+            const url = window.location.origin + '/news/' + currentShareData.id;
+            const text = encodeURIComponent(currentShareData.title + " @Tech4Today #TechIntelligence");
+            window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${text}`, '_blank');
+        }
+
+        function downloadShareImg() {
+            const link = document.createElement('a');
+            link.href = `/api/share-image/${currentShareData.id}`;
+            link.download = `tech4today_pulse_${currentShareData.id}.jpg`;
+            link.click();
+        }
+    </script>
+</body>
+</html>

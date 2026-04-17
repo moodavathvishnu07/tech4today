@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | Codly Technical Intelligence</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Outfit:wght@900&display=swap" rel="stylesheet">
+    <style>
+        .legal-container {
+            max-width: 800px;
+            margin: 5rem auto;
+            padding: 3rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-google);
+            border-radius: 24px;
+            box-shadow: var(--shadow-bento);
+        }
+        h1 { font-family: 'Outfit'; font-size: 2.5rem; margin-bottom: 2rem; color: var(--clr-discovery); }
+        h2 { font-size: 1.2rem; font-weight: 800; margin: 2rem 0 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        p { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1rem; }
+        .back-link { display: inline-block; margin-bottom: 2rem; color: var(--clr-discovery); text-decoration: none; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; }
+        .back-link:hover { text-decoration: underline; }
+        ul { margin-bottom: 1.5rem; padding-left: 1.5rem; color: var(--text-secondary); }
+        li { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="legal-container">
+        <a href="/" class="back-link">← Return to Hub</a>
+        <h1>Privacy Policy</h1>
+        
+        <p>Your privacy is paramount. This policy outlines how Codly Hub handles data to provide a personalized technical intelligence experience.</p>
+
+        <h2>1. Data Collection</h2>
+        <p>We collect minimal data necessary for core features:</p>
+        <ul>
+            <li><strong>Location Data</strong>: We use IP-based location (ipapi) to determine if you should see the Indian Local Core or Global Hub by default.</li>
+            <li><strong>Preference Data</strong>: We store your theme (Light/Dark) and Vibe (On/Off) settings in your local browser storage.</li>
+        </ul>
+
+        <h2>2. Cookies</h2>
+        <p>Codly Hub uses essential cookies to track your regional preference (`codly_country`) and view mode (`codly_view_mode`). These are used solely for content localization and do not track you across other websites.</p>
+
+        <h2>3. Local Storage</h2>
+        <p>We use browser Local Storage to cache last sync times and theme settings locally on your device to minimize server load and improve performance.</p>
+
+        <h2>4. Third-Party Services</h2>
+        <p>We use DucksDuckGo and Google favicon services to display publisher icons. These services may collect basic request metadata as per their own privacy policies.</p>
+
+        <h2>5. Play Store Compliance</h2>
+        <p>This application does not collect personally identifiable information (PII), names, emails, or phone numbers. All news processing happens on our secure backend without linking data to individual users.</p>
+
+        <footer style="margin-top: 4rem; opacity: 0.5; font-size: 0.8rem;">
+            Last Updated: April 2026
+        </footer>
+    </div>
+</body>
+</html>

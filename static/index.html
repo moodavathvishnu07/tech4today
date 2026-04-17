@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech4Today | GenZ Technical Intelligence Hub (Decoupled)</title>
+    <meta name="description" content="Tech4Today: The premier technical intelligence hub. Decoupled, high-velocity, and 100% night-only.">
+    <link rel="stylesheet" href="/static/css/style.css?v=16.6">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+    <style>
+        #api-config-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 10000;
+        }
+        .config-card {
+            background: #0a0a0a; padding: 2rem; border: 1px solid #333; border-radius: 12px; width: 400px;
+        }
+        .config-card input {
+            width: 100%; padding: 0.8rem; background: #111; border: 1px solid #444; color: white; margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="api-config-modal">
+        <div class="config-card">
+            <h3>🔗 Backend Discovery</h3>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Enter your Hugging Face space URL (e.g., https://user-name.hf.space)</p>
+            <input type="text" id="api-url-input" placeholder="https://...">
+            <button onclick="saveApiUrl()" style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: #2f81f7; font-weight: 800; border: none; cursor: pointer;">CONNECT TO HUB</button>
+        </div>
+    </div>
+
+    <header class="main-header">
+        <div class="logo-area">
+            <h1>TECH4<span>TODAY</span></h1>
+            <span class="status-badge" id="sync-status">SYNCING...</span>
+        </div>
+        <div class="nav-links">
+            <a href="/" data-category="top">LATEST</a>
+            <a href="/?category=india-tech" data-category="india-tech">INDIA TECH</a>
+            <a href="/?category=startups" data-category="startups">STARTUPS</a>
+            <a href="/?category=ai-coding" data-category="ai-coding">AI CORE</a>
+            <button class="action-btn" onclick="toggleViewMode()">LOCAL/GLOBAL</button>
+            <button class="action-btn" onclick="promptApiUrl()">CONFIG API</button>
+        </div>
+    </header>
+
+    <main class="hub-container">
+        <div class="bento-grid" id="pulse-grid">
+            <!-- Pulses will be injected here -->
+            <div style="grid-column: 1/-1; padding: 10rem; text-align: center; opacity: 0.5;">
+                <h2>INITIALIZING INTELLIGENCE MESH...</h2>
+            </div>
+        </div>
+    </main>
+
+    <footer style="padding: 10rem 5%; border-top: 1px solid #333; text-align: center; opacity: 0.5;">
+        <div style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 1rem;">
+            Tech4Today Decoupled UI v16.6 · Vercel Edge Active
+        </div>
+        <div style="font-size: 0.7rem;">
+            <a href="/privacy" style="color: white; text-decoration: none; margin: 0 1rem;">PRIVACY</a>
+            <a href="/legal" style="color: white; text-decoration: none; margin: 0 1rem;">LEGAL</a>
+        </div>
+    </footer>
+
+    <script>
+        let API_BASE = localStorage.getItem('tech4today-api-url') || '';
+        const params = new URLSearchParams(window.location.search);
+        const category = params.get('category') || 'top';
+
+        function promptApiUrl() {
+            document.getElementById('api-config-modal').style.display = 'flex';
+        }
+
+        function saveApiUrl() {
+            const url = document.getElementById('api-url-input').value.trim().replace(/\/$/, "");
+            if (url) {
+                localStorage.setItem('tech4today-api-url', url);
+                window.location.reload();
+            }
+        }
+
+        async function fetchPulses() {
+            if (!API_BASE) {
+                promptApiUrl();
+                return;
+            }
+
+            try {
+                const url = new URL(`${API_BASE}/api/mesh-feed`);
+                url.searchParams.append('category', category);
+                url.searchParams.append('view_mode', document.cookie.includes('codly_view_mode=global') ? 'global' : 'local');
+
+                const res = await fetch(url);
+                const data = await res.json();
+                renderPulses(data.articles);
+                document.getElementById('sync-status').innerText = `LAST SYNC: ${data.last_updated}`;
+            } catch (err) {
+                console.error("Discovery Failed:", err);
+                document.getElementById('pulse-grid').innerHTML = `
+                    <div style="grid-column: 1/-1; padding: 10rem; text-align: center; color: #ff4d4d;">
+                        <h2>CONNECTION BARRIER DETECTED</h2>
+                        <p>Unable to talk to Hub Backend. Check your API Config.</p>
+                        <button onclick="promptApiUrl()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #333; color: white; border: none; cursor: pointer;">RE-CONFIG API</button>
+                    </div>
+                `;
+            }
+        }
+
+        function renderPulses(articles) {
+            const grid = document.getElementById('pulse-grid');
+            grid.innerHTML = '';
+
+            articles.forEach((a, i) => {
+                const card = `
+                    <article class="pulse-card ${i % 5 === 0 ? 'card-xl' : ''}" style="--bg-url: url('${a.thumbnail}')">
+                        <div class="card-overlay">
+                            <div class="card-header">
+                                <span class="tag-badge">${a.category}</span>
+                                <span class="time-stamp">${a.time_ago}</span>
+                            </div>
+                            <div class="card-body">
+                                <h3>${a.title}</h3>
+                                <p>${a.summary}</p>
+                            </div>
+                            <div class="card-footer">
+                                <div class="source-info">
+                                    <img src="https://www.google.com/s2/favicons?domain=${a.domain}&sz=32" class="source-icon">
+                                    <span>${a.source}</span>
+                                </div>
+                                <a href="${a.link}" target="_blank" class="read-btn">READ PULSE</a>
+                            </div>
+                        </div>
+                    </article>
+                `;
+                grid.insertAdjacentHTML('beforeend', card);
+            });
+        }
+
+        function toggleViewMode() {
+            const currentMode = document.cookie.includes('codly_view_mode=local') ? 'global' : 'local';
+            document.cookie = `codly_view_mode=${currentMode}; path=/; max-age=31536000; SameSite=Lax`;
+            window.location.reload();
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchPulses);
+    </script>
+</body>
+</html>
