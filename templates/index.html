@@ -1,247 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech4Today | The No-BS Tech Hub</title>
-    <meta name="description" content="Tech4Today is the fastest No-BS tech news hub. Real-time, fluff-free pulses on AI, Startups, and more.">
-    <meta name="keywords" content="Tech News, AI News, India Tech, Device Launches, Technical Intelligence, Tech4Today, No-BS">
-    <link rel="canonical" href="https://codly.onrender.com/" />
+    <title>{{ article.title }} | Tech4Today Tech Pulse</title>
+    <meta name="description" content="{{ article.seo_description }}">
+    <link rel="canonical" href="{{ article.canonical_url }}" />
+    <meta name="google-site-verification" content="zA5q-11c50XSy206IKfmqrCx6KF4bdlj7Pwk2P_hlU4" />
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tech4today.onrender.com/">
-    <meta property="og:title" content="Tech4Today | The No-BS Tech Hub">
-    <meta property="og:description" content="Fastest tech news summaries. Real-time, no-fluff pulses on what matters.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ article.canonical_url }}">
+    <meta property="og:title" content="{{ article.title }}">
+    <meta property="og:description" content="{{ article.seo_description }}">
+    <meta property="og:image" content="{{ request.host_url.rstrip('/') }}/api/share-image/{{ article.id }}">
+    <meta property="og:image:width" content="1080">
+    <meta property="og:image:height" content="1920">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://tech4today.onrender.com/">
-    <meta property="twitter:title" content="Tech4Today | The No-BS Tech Hub">
-    <meta property="twitter:description" content="Fastest tech news summaries. Real-time, no-fluff pulses on what matters.">
-    <meta property="twitter:image" content="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000">
+    <meta property="twitter:url" content="{{ article.canonical_url }}">
+    <meta property="twitter:title" content="{{ article.title }}">
+    <meta property="twitter:description" content="{{ article.seo_description }}">
+    <meta property="twitter:image" content="{{ request.host_url.rstrip('/') }}/api/share-image/{{ article.id }}">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=7.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=6.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;800;900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
     <script>
-        // FORCED NIGHT MODE (GLOBAL DEFAULT)
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('codly-theme', 'dark');
+        // FORCED DARK MODE DEFAULT
+        const savedTheme = localStorage.getItem('codly-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
 
-        function toggleVibe() {
-            const currentVibe = localStorage.getItem('codly-vibe') === 'on' ? 'off' : 'on';
-            localStorage.setItem('codly-vibe', currentVibe);
-            window.location.reload();
-        }
-
-        function toggleViewMode() {
-            const currentMode = document.cookie.includes('codly_view_mode=local') ? 'global' : 'local';
-            document.cookie = `codly_view_mode=${currentMode}; path=/; max-age=31536000; SameSite=Lax`;
-            window.location.reload();
-        }
-
-        function checkLiveSync() {
-            const status = document.getElementById('sync-status');
-            if (status) status.style.display = 'inline';
-
-            fetch('/api/sync-info')
-                .then(r => r.json())
-                .then(data => {
-                    const localTime = localStorage.getItem('tech4today-last-sync');
-                    if (localTime && localTime !== data.last_updated) {
-                        localStorage.setItem('tech4today-last-sync', data.last_updated);
-                        window.location.reload();
-                    }
-                    if (!localTime) localStorage.setItem('tech4today-last-sync', data.last_updated);
-                    if (status) status.style.display = 'none';
-                })
-                .catch(() => {
-                    if (status) status.style.display = 'none';
-                });
-        }
-        setInterval(checkLiveSync, 30000);
-
-        function forceSync() {
-            const btn = event.target;
-            btn.innerHTML = 'SYNCING...';
-            btn.disabled = true;
-            
-            fetch('/api/force-sync')
-                .then(() => {
-                    btn.innerHTML = 'SUCCESS';
-                    setTimeout(() => { btn.innerHTML = 'REFRESH'; btn.disabled = false; }, 2000);
-                })
-                .catch(() => {
-                    btn.innerHTML = 'FAILED';
-                    setTimeout(() => { btn.innerHTML = 'REFRESH'; btn.disabled = false; }, 2000);
-                });
-        }
-
-
-        async function detectLocation() {
-            try {
-                if (!document.cookie.includes('codly_country')) {
-                    const response = await fetch('https://ipapi.co/json/');
-                    const data = await response.json();
-                    if (data.country_code) {
-                        document.cookie = `codly_country=${data.country_code}; path=/; max-age=31536000; SameSite=Lax`;
-                        window.location.reload();
-                    }
-                }
-            } catch (err) { }
-        }
+        // High-End Shrinking Header
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('shrinking-header');
+            if (window.scrollY > 100) {
+                header.classList.add('header-shrunk');
+            } else {
+                header.classList.remove('header-shrunk');
+            }
+        });
 
         window.addEventListener('DOMContentLoaded', () => {
-            updateToggleButton(localStorage.getItem('codly-theme'));
-            if (localStorage.getItem('codly-vibe') === 'on') {
-                document.body.classList.add('vibe-active');
-                if(document.getElementById('vibe-btn')) document.getElementById('vibe-btn').innerHTML = 'VIBE ON';
-            }
-            detectLocation();
+             if (localStorage.getItem('codly-vibe') === 'on') {
+                 document.body.classList.add('vibe-active');
+             }
         });
     </script>
 </head>
-
 <body>
-    <header>
-        <div class="logo-section" onclick="window.location.href='/';">
-            <div class="live-pulsar"></div>
-            <h1 style="font-family: 'Outfit';">Tech<span>4</span>Today Hub</h1>
-            <span id="sync-status"
-                style="display: none; font-size: 0.6rem; color: #32d74b; font-weight: 900; letter-spacing: 0.1em; padding-left: 0.5rem; animation: pulse 1s infinite;">SYNCING...</span>
+    <div id="shrinking-header" class="reader-header">
+        <div style="max-width: 900px; margin: 0 auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <a href="/" style="text-decoration: none; color: var(--accent-blue); font-weight: 800; font-size: 0.9rem;">← RETURN HUB</a>
+                <span class="vibe-badge" style="background: rgba(255,255,255,0.05);">{{ article.sentiment | default('⚖️ Neutral') }}</span>
+            </div>
+            <h1 class="shrinking-title">Tech<span>4</span>Today | No-BS</h1>
+            <h1 class="shrinking-title" style="margin-top: 2rem; font-size: 2.5rem; line-height: 1.1;">{{ article.title }}</h1>
+            <div class="article-meta" style="margin-top: 1rem; opacity: 0.8; font-size: 0.8rem; font-weight: 800; display: flex; align-items: center; gap: 0.8rem;">
+                <img src="https://icons.duckduckgo.com/ip3/{{ article.domain }}.ico" 
+                     onerror="this.src='https://www.google.com/s2/favicons?domain={{ article.domain }}&sz=32';"
+                     class="source-icon">
+                <span>{{ article.source }}</span>
+                <span>• {{ article.reading_time }} MIN READ</span>
+                <span style="color: var(--accent-blue);">• UPLOADED {{ article.time_ago }}</span>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="share-btn" onclick="openShareModal(event, '{{ article.id }}', '{{ article.title|safe }}', '{{ article.thumbnail }}')">
+                    🚀 SHARE IMAGE CARD
+                </button>
+                <a href="{{ article.link }}" target="_blank" class="share-btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                    🌐 SOURCE PULSE
+                </a>
+            </div>
         </div>
-
-        <div class="header-controls">
-            <button class="region-toggle-btn" onclick="forceSync();" style="background: rgba(50,215,75,0.1); color: #32d74b; border-color: rgba(50,215,75,0.2); font-weight: 900;">REFRESH</button>
-            <button class="region-toggle-btn {% if view_mode == 'global' %}region-global{% endif %}"
-                onclick="toggleViewMode();">{% if view_mode == 'local' %}INDIAN{% else %}GLOBAL{% endif %}</button>
-            <a href="/pulse-30" class="vibe-toggle"
-                style="background: var(--accent-blue); color: #fff; text-decoration: none; border: none;">PRIME 30</a>
-            <button id="vibe-btn" class="vibe-toggle" onclick="toggleVibe();">VIBE OFF</button>
-        </div>
-    </header>
-
-    <nav class="pill-nav-container">
-        <div class="pill-nav">
-            <a href="/?category=top" class="pill {% if category_filter == 'top' %}active{% endif %}">Top Stories</a>
-            <a href="/?category=ai-coding" class="pill {% if category_filter == 'ai-coding' %}active{% endif %}">🚀 AI &
-                Coding</a>
-            <a href="/?category=india-tech" class="pill {% if category_filter == 'india-tech' %}active{% endif %}">🇮🇳
-                India Tech</a>
-            <a href="/?category=devices" class="pill {% if category_filter == 'devices' %}active{% endif %}">📱
-                Devices</a>
-            <a href="/?category=discoveries" class="pill {% if category_filter == 'discoveries' %}active{% endif %}">🧪
-                Discoveries</a>
-            <a href="/?category=tools" class="pill {% if category_filter == 'tools' %}active{% endif %}">🛠️ Tools</a>
-            <a href="/?category=startups" class="pill {% if category_filter == 'startups' %}active{% endif %}">🦄 Startups</a>
-            <a href="/?category=tech-news" class="pill {% if category_filter == 'tech-news' %}active{% endif %}">📰 Tech News</a>
-        </div>
-    </nav>
-
-    <div class="discovery-radar-container">
-        <span class="discovery-label">📍 Trending in {% if view_mode == 'local' %}India{% else %}Global{% endif
-            %}:</span>
-        {% if hotspots %}
-        {% for spot in hotspots %}
-        <span class="hotspot-pill">
-            {{ spot.name }} <span>{{ spot.count }}</span>
-        </span>
-        {% endfor %}
-        {% endif %}
     </div>
 
-    <div id="discovery-root">
-    <!-- 🛰️ v15.5 AI DISCOVERY RADAR: MODELS & TOOLS -->
-    {% if radar_articles %}
-    <section class="radar-wrapper">
-        <div class="radar-header" onclick="toggleRadar(this);">
-            <div>
-                <h2>🛰️ ELITE DISCOVERY RADAR <span class="radar-toggle-icon">▼</span></h2>
-                <p>Real-time Foundational Models, Technical Tools & Startup Breakthroughs</p>
-            </div>
-            <a href="/?category=ai-coding" onclick="event.stopPropagation();" style="font-size: 0.7rem; color: var(--accent-blue); font-weight: 800; text-decoration: none; padding-bottom: 0.2rem;">EXPLORE RADAR →</a>
-        </div>
-        <div class="radar-scroller">
-            {% for article in radar_articles %}
-            <div class="radar-card" onclick="window.location.href='/news/{{ article.id }}'">
-                <div class="radar-img" style="background-image: url('{{ article.thumbnail }}');"></div>
-                <h3 class="radar-title">{{ article.title }}</h3>
-                <div class="radar-meta">
-                    <span class="radar-badge">{{ article.category|upper }}</span>
-                    <span>{{ article.time_ago }}</span>
+    <main class="mag-content">
+        <div class="hero-image" style="background-image: url('{{ article.thumbnail }}');"></div>
+        
+        <div class="report-body">
+            <!-- TL;DR (What happened) -->
+            <section class="content-block standard-summary">
+                <h2 style="font-size: 1rem; color: var(--accent-blue); text-transform: uppercase; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: 0.05em;">TL;DR: What Happened</h2>
+                <p style="font-size: 1.4rem; color: var(--text-primary); line-height: 1.5; font-weight: 500; border-left: 4px solid var(--accent-blue); padding-left: 1.5rem;">
+                    {{ article.summary if article.summary else 'Pulse extraction pending...' }}
+                </p>
+                
+                <div style="margin-top: 3rem; display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; padding: 2rem; background: rgba(255,255,255,0.03); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 700;">DEEP-DIVE INTO THE RAW INTELLIGENCE</p>
+                    <a href="{{ article.link }}" target="_blank" class="share-btn" style="text-decoration: none; color: white; background: var(--accent-blue); padding: 0.8rem 1.5rem; font-size: 0.9rem; font-weight: 800; text-transform: uppercase;">
+                        🌐 Read on {{ article.source }}
+                    </a>
                 </div>
-            </div>
-            {% endfor %}
-        </div>
-    </section>
-    {% endif %}
-
-    <div class="main-content-wrapper">
-        <main class="main-feed-full">
-            <div class="bento-grid">
-                {% if articles %}
-                {% for article in articles %}
-                <article class="bento-card"
-                    onclick="window.location.href='{{ url_for('article_detail', news_id=article.id) }}';">
-                    <div class="card-header">
-                        <div class="source-info">
-                            <img src="https://icons.duckduckgo.com/ip3/{{ article.domain }}.ico"
-                                onerror="this.src='https://www.google.com/s2/favicons?domain={{ article.domain }}&sz=32';"
-                                class="source-icon">
-                            <span>{{ article.source }}</span>
-                        </div>
-                        <span class="vibe-badge">{{ article.sentiment | default('⚖️ Neutral') }}</span>
-                    </div>
-
-                    <div class="card-image" style="background-image: url('{{ article.thumbnail }}');"></div>
-
-                    <h2 class="article-title">{{ article.title }}</h2>
-
-                    <p class="summary-text standard-summary">{{ (article.summary[:120] ~ '...') if article.summary else 'Pulse extraction pending...' }}</p>
-                    <p class="summary-text vibe-summary" style="display: none;">{{ (article.vibe_summary[:120] ~ '...') if article.vibe_summary else ((article.summary[:120] ~ '...') if article.summary else 'Pulse extraction pending...') }}</p>
-
-                    <div class="card-footer">
-                        {% set cat = article.category %}
-                        <span
-                            class="cat-pill {% if 'India' in cat %}bg-india{% elif 'AI' in cat %}bg-ai{% elif 'Devices' in cat %}bg-devices{% elif 'Discoveries' in cat %}bg-discovery{% elif 'Tools' in cat %}bg-tools{% elif 'Startup' in cat %}bg-startup{% else %}bg-ai{% endif %}">
-                            {{ article.category }}
-                        </span>
-                        <div style="display: flex; gap: 0.8rem; align-items: center;">
-                            <span style="font-size: 0.7rem; font-weight: 800; color: var(--text-secondary); opacity: 0.5;">• {{ article.time_ago }}</span>
-                            <button class="share-btn" onclick="openShareModal(event, {{ article.id }}, '{{ article.title | replace("'", "") }}', '{{ article.thumbnail }}');" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; padding: 0.5rem; transition: 0.2s;">📤</button>
-                        </div>
-                        <span class="read-more">ANALYZE</span>
-                    </div>
-                </article>
-                {% endfor %}
-                {% else %}
-                <div style="text-align: center; padding: 10rem; width: 100%;">
-                    <p>No active pulses in this lens. <a href="/" style="color: var(--accent-blue);">Refresh Reality</a>
-                    </p>
+            </section>
+            
+            <section class="content-block vibe-summary" style="display: none;">
+                <div style="padding: 2rem; background: var(--accent-blue); color: #fff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,122,255,0.4);">
+                    <h2 style="font-size: 0.9rem; margin-bottom: 1.5rem; opacity: 0.8; font-weight: 800; text-transform: uppercase;">TL;DR VIBE CHECK</h2>
+                    <p style="font-size: 1.5rem; line-height: 1.4; font-weight: 700;">{{ article.vibe_summary if article.vibe_summary else (article.summary if article.summary else 'Pulse extraction pending...') }}</p>
                 </div>
-                {% endif %}
-            </div>
-        </main>
-    </div>
-    </div>
+            </section>
+
+            <!-- Why It Matters -->
+            <section class="content-block" style="margin: 4rem 0;">
+                <h2 style="font-size: 1rem; color: var(--accent-blue); text-transform: uppercase; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: 0.05em;">Why It Matters</h2>
+                <div style="background: var(--bg-card); padding: 2.5rem; border-radius: 16px; border: 1px solid var(--border-google);">
+                    <p style="font-size: 1.2rem; line-height: 1.6; font-weight: 500; color: var(--text-primary);">{{ article.why }}</p>
+                </div>
+            </section>
+
+            <!-- Key Points -->
+            <section class="content-block">
+                <h2 style="font-size: 1rem; color: var(--accent-blue); text-transform: uppercase; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: 0.05em;">Key Points</h2>
+                <ul style="list-style: none; padding: 0;">
+                    {% for point in article.points %}
+                        <li style="position: relative; padding-left: 2.5rem; margin-bottom: 1.5rem; font-size: 1.15rem; line-height: 1.5; font-weight: 500; color: var(--text-primary);">
+                            <span style="position: absolute; left: 0; color: var(--accent-blue); font-weight: 900; font-size: 1.2rem;">→</span>
+                            {{ point }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </div>
+    </main>
 
     <footer style="padding: 10rem 5%; border-top: 1px solid var(--border-google); text-align: center; opacity: 0.5;">
-        <div style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 1rem;">
-            Tech4Today | The No-BS Tech Hub v10.2 · 10m Optimized Sync
-        </div>
-        <div style="font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;">
-            <a href="/privacy" style="color: var(--text-primary); text-decoration: none; margin: 0 1rem; opacity: 0.8;">PRIVACY</a>
-            <a href="/legal" style="color: var(--text-primary); text-decoration: none; margin: 0 1rem; opacity: 0.8;">LEGAL</a>
-        </div>
+        <div style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase;">TECH4TODAY | THE NO-BS TECH HUB · BUILD 7.0</div>
     </footer>
 
-    <!-- --- v12.0 SOCIAL SHARE MODAL --- -->
+    <!-- SHARED MODAL LOGIC -->
     <div id="share-modal" class="modal-overlay" onclick="closeShareModal(event);">
         <div class="modal-content" onclick="event.stopPropagation();">
             <div class="modal-header">
@@ -256,7 +147,7 @@
                 <button class="share-option-btn wh" onclick="shareToWhatsApp();">WhatsApp Link</button>
                 <button class="share-option-btn tw" onclick="shareToTwitter();">Post to X</button>
                 <button class="share-option-btn ig" style="background: var(--accent-blue); grid-column: span 2; font-size: 1rem; border: 2px solid #fff;" onclick="shareToNative();">🚀 SHARE FULL IMAGE CARD</button>
-                <button class="share-option-btn dl" onclick="downloadShareImg();">Save JPG</button>
+                <button class="share-option-btn dl" onclick="downloadShareImg();">Download JPG</button>
             </div>
             <p id="share-status" style="font-size: 0.7rem; color: var(--text-secondary); text-align: center; margin-top: 1rem;"></p>
             <p style="font-size: 0.65rem; color: var(--accent-blue); text-align: center; font-weight: 800; text-transform: uppercase; margin-top: 0.5rem; opacity: 0.9;">💡 Hint: Use the "🚀 SHARE FULL IMAGE" button to send the actual JPG to WhatsApp</p>
@@ -290,6 +181,7 @@
             img.src = imgUrl;
         }
 
+        // v15.0 Global Shortcuts
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeShareModal();
         });
@@ -344,11 +236,6 @@
             link.href = `/api/share-image/${currentShareData.id}`;
             link.download = `tech4today_pulse_${currentShareData.id}.jpg`;
             link.click();
-        }
-
-        function toggleRadar(header) {
-            const wrapper = header.closest('.radar-wrapper');
-            wrapper.classList.toggle('expanded');
         }
     </script>
 </body>
