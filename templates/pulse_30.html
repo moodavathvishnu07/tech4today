@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prime 30 | Fastest No-BS Tech News</title>
-    <meta name="google-site-verification" content="zA5q-11c50XSy206IKfmqrCx6KF4bdlj7Pwk2P_hlU4" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=6.0">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800;900&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
     <style>
-        body { 
-            overflow: hidden; 
-            margin: 0; 
-            background: #000; 
+        body {
+            overflow: hidden;
+            margin: 0;
+            background: #000;
             height: 100vh;
         }
+
         .pulse-deck {
             height: 100vh;
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
             scrollbar-width: none;
         }
-        .pulse-deck::-webkit-scrollbar { display: none; }
-        
+
+        .pulse-deck::-webkit-scrollbar {
+            display: none;
+        }
+
         .slide {
             height: 100vh;
             width: 100%;
@@ -34,13 +39,14 @@
             box-sizing: border-box;
             background-size: cover;
             background-position: center;
-            background-color: #1a1a1a; /* Fallback Color */
+            background-color: #1a1a1a;
+            /* Fallback Color */
         }
 
         .slide-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.8) 100%);
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.8) 100%);
         }
 
         .slide-content {
@@ -65,10 +71,10 @@
             line-height: 1.4;
             font-weight: 600;
             color: #fff;
-            background: rgba(0,122,255,0.2);
+            background: rgba(0, 122, 255, 0.2);
             padding: 2rem;
             border-radius: 20px;
-            border: 1px solid rgba(0,122,255,0.4);
+            border: 1px solid rgba(0, 122, 255, 0.4);
             margin-bottom: 3rem;
         }
 
@@ -89,10 +95,11 @@
             left: 2rem;
             right: 2rem;
             height: 4px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 2px;
             z-index: 1000;
         }
+
         .progress-fill {
             height: 100%;
             background: #007aff;
@@ -123,6 +130,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="deck-progress">
         <div id="p-bar" class="progress-fill"></div>
@@ -137,16 +145,17 @@
             <div class="slide-content">
                 <div class="slide-meta" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <img src="https://icons.duckduckgo.com/ip3/{{ article.domain }}.ico" 
-                             onerror="this.src='https://www.google.com/s2/favicons?domain={{ article.domain }}&sz=32';"
-                             style="width: 20px; height: 20px; border-radius: 50%;">
+                        <img src="https://icons.duckduckgo.com/ip3/{{ article.domain }}.ico"
+                            onerror="this.src='https://www.google.com/s2/favicons?domain={{ article.domain }}&sz=32';"
+                            style="width: 20px; height: 20px; border-radius: 50%;">
                         <span>{{ article.source|upper }}</span>
                     </div>
                     <span>{{ article.sentiment }}</span>
                 </div>
                 <h2 class="slide-title">{{ article.title }}</h2>
                 <div class="slide-vibe">
-                    {{ article.vibe_summary if article.vibe_summary else (article.summary if article.summary else 'Pulse extraction pending...') }}
+                    {{ article.vibe_summary if article.vibe_summary else (article.summary if article.summary else 'Pulse
+                    extraction pending...') }}
                 </div>
                 <div class="slide-meta">
                     <span>{{ loop.index }} OF 15 PULSES</span>
@@ -160,7 +169,8 @@
         <div class="slide finish-screen" id="finish-slide">
             <div class="slide-content" style="text-align: center;">
                 <h2 class="slide-title" style="font-size: 4rem;">LOOP COMPLETE</h2>
-                <p style="font-size: 1.5rem; font-weight: 800; opacity: 0.8; margin-bottom: 3rem;">YOUR INTELLIGENCE IS REFRESHED</p>
+                <p style="font-size: 1.5rem; font-weight: 800; opacity: 0.8; margin-bottom: 3rem;">YOUR INTELLIGENCE IS
+                    REFRESHED</p>
                 <div id="timer-text" style="font-weight: 900; font-size: 1rem;">RETURNING HOME IN 3s...</div>
             </div>
         </div>
@@ -191,4 +201,5 @@
         });
     </script>
 </body>
+
 </html>
