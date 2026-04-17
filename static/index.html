@@ -1,142 +1,44 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech4Today | GenZ Technical Intelligence Hub (Decoupled)</title>
-    <meta name="description" content="Tech4Today: The premier technical intelligence hub. Decoupled, high-velocity, and 100% night-only.">
-    <link rel="stylesheet" href="/static/css/style.css?v=16.6">
+    <title>Tech4Today | The No-BS Tech Hub</title>
+    <meta name="description" content="Tech4Today is the fastest No-BS tech news hub. Real-time, fluff-free pulses on AI, Startups, and more.">
+    <meta name="keywords" content="Tech News, AI News, India Tech, Device Launches, Technical Intelligence, Tech4Today, No-BS">
+    <link rel="canonical" href="https://codly.onrender.com/" />
+    <meta name="google-site-verification" content="zA5q-11c50XSy206IKfmqrCx6KF4bdlj7Pwk2P_hlU4" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tech4today.onrender.com/">
+    <meta property="og:title" content="Tech4Today | The No-BS Tech Hub">
+    <meta property="og:description" content="Fastest tech news summaries. Real-time, no-fluff pulses on what matters.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://tech4today.onrender.com/">
+    <meta property="twitter:title" content="Tech4Today | The No-BS Tech Hub">
+    <meta property="twitter:description" content="Fastest tech news summaries. Real-time, no-fluff pulses on what matters.">
+    <meta property="twitter:image" content="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=7.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
-    <style>
-        #api-config-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 10000;
-        }
-        .config-card {
-            background: #0a0a0a; padding: 2rem; border: 1px solid #333; border-radius: 12px; width: 400px;
-        }
-        .config-card input {
-            width: 100%; padding: 0.8rem; background: #111; border: 1px solid #444; color: white; margin-top: 1rem;
-        }
-    </style>
-</head>
-<body>
-    <div id="api-config-modal">
-        <div class="config-card">
-            <h3>🔗 Backend Discovery</h3>
-            <p style="font-size: 0.8rem; opacity: 0.7;">Enter your Hugging Face space URL (e.g., https://user-name.hf.space)</p>
-            <input type="text" id="api-url-input" placeholder="https://...">
-            <button onclick="saveApiUrl()" style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: #2f81f7; font-weight: 800; border: none; cursor: pointer;">CONNECT TO HUB</button>
-        </div>
-    </div>
-
-    <header class="main-header">
-        <div class="logo-area">
-            <h1>TECH4<span>TODAY</span></h1>
-            <span class="status-badge" id="sync-status">SYNCING...</span>
-        </div>
-        <div class="nav-links">
-            <a href="/" data-category="top">LATEST</a>
-            <a href="/?category=india-tech" data-category="india-tech">INDIA TECH</a>
-            <a href="/?category=startups" data-category="startups">STARTUPS</a>
-            <a href="/?category=ai-coding" data-category="ai-coding">AI CORE</a>
-            <button class="action-btn" onclick="toggleViewMode()">LOCAL/GLOBAL</button>
-            <button class="action-btn" onclick="promptApiUrl()">CONFIG API</button>
-        </div>
-    </header>
-
-    <main class="hub-container">
-        <div class="bento-grid" id="pulse-grid">
-            <!-- Pulses will be injected here -->
-            <div style="grid-column: 1/-1; padding: 10rem; text-align: center; opacity: 0.5;">
-                <h2>INITIALIZING INTELLIGENCE MESH...</h2>
-            </div>
-        </div>
-    </main>
-
-    <footer style="padding: 10rem 5%; border-top: 1px solid #333; text-align: center; opacity: 0.5;">
-        <div style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 1rem;">
-            Tech4Today Decoupled UI v16.6 · Vercel Edge Active
-        </div>
-        <div style="font-size: 0.7rem;">
-            <a href="/privacy" style="color: white; text-decoration: none; margin: 0 1rem;">PRIVACY</a>
-            <a href="/legal" style="color: white; text-decoration: none; margin: 0 1rem;">LEGAL</a>
-        </div>
-    </footer>
-
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;800;900&display=swap"
+        rel="stylesheet">
     <script>
-        let API_BASE = localStorage.getItem('tech4today-api-url') || '';
-        const params = new URLSearchParams(window.location.search);
-        const category = params.get('category') || 'top';
+        // FORCED NIGHT MODE (GLOBAL DEFAULT)
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('codly-theme', 'dark');
 
-        function promptApiUrl() {
-            document.getElementById('api-config-modal').style.display = 'flex';
-        }
-
-        function saveApiUrl() {
-            const url = document.getElementById('api-url-input').value.trim().replace(/\/$/, "");
-            if (url) {
-                localStorage.setItem('tech4today-api-url', url);
-                window.location.reload();
-            }
-        }
-
-        async function fetchPulses() {
-            if (!API_BASE) {
-                promptApiUrl();
-                return;
-            }
-
-            try {
-                const url = new URL(`${API_BASE}/api/mesh-feed`);
-                url.searchParams.append('category', category);
-                url.searchParams.append('view_mode', document.cookie.includes('codly_view_mode=global') ? 'global' : 'local');
-
-                const res = await fetch(url);
-                const data = await res.json();
-                renderPulses(data.articles);
-                document.getElementById('sync-status').innerText = `LAST SYNC: ${data.last_updated}`;
-            } catch (err) {
-                console.error("Discovery Failed:", err);
-                document.getElementById('pulse-grid').innerHTML = `
-                    <div style="grid-column: 1/-1; padding: 10rem; text-align: center; color: #ff4d4d;">
-                        <h2>CONNECTION BARRIER DETECTED</h2>
-                        <p>Unable to talk to Hub Backend. Check your API Config.</p>
-                        <button onclick="promptApiUrl()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #333; color: white; border: none; cursor: pointer;">RE-CONFIG API</button>
-                    </div>
-                `;
-            }
-        }
-
-        function renderPulses(articles) {
-            const grid = document.getElementById('pulse-grid');
-            grid.innerHTML = '';
-
-            articles.forEach((a, i) => {
-                const card = `
-                    <article class="pulse-card ${i % 5 === 0 ? 'card-xl' : ''}" style="--bg-url: url('${a.thumbnail}')">
-                        <div class="card-overlay">
-                            <div class="card-header">
-                                <span class="tag-badge">${a.category}</span>
-                                <span class="time-stamp">${a.time_ago}</span>
-                            </div>
-                            <div class="card-body">
-                                <h3>${a.title}</h3>
-                                <p>${a.summary}</p>
-                            </div>
-                            <div class="card-footer">
-                                <div class="source-info">
-                                    <img src="https://www.google.com/s2/favicons?domain=${a.domain}&sz=32" class="source-icon">
-                                    <span>${a.source}</span>
-                                </div>
-                                <a href="${a.link}" target="_blank" class="read-btn">READ PULSE</a>
-                            </div>
-                        </div>
-                    </article>
-                `;
-                grid.insertAdjacentHTML('beforeend', card);
-            });
+        function toggleVibe() {
+            const currentVibe = localStorage.getItem('codly-vibe') === 'on' ? 'off' : 'on';
+            localStorage.setItem('codly-vibe', currentVibe);
+            window.location.reload();
         }
 
         function toggleViewMode() {
@@ -145,7 +47,310 @@
             window.location.reload();
         }
 
-        document.addEventListener('DOMContentLoaded', fetchPulses);
+        function checkLiveSync() {
+            const status = document.getElementById('sync-status');
+            if (status) status.style.display = 'inline';
+
+            fetch('/api/sync-info')
+                .then(r => r.json())
+                .then(data => {
+                    const localTime = localStorage.getItem('tech4today-last-sync');
+                    if (localTime && localTime !== data.last_updated) {
+                        localStorage.setItem('tech4today-last-sync', data.last_updated);
+                        window.location.reload();
+                    }
+                    if (!localTime) localStorage.setItem('tech4today-last-sync', data.last_updated);
+                    if (status) status.style.display = 'none';
+                })
+                .catch(() => {
+                    if (status) status.style.display = 'none';
+                });
+        }
+        setInterval(checkLiveSync, 30000);
+
+        function forceSync() {
+            const btn = event.target;
+            btn.innerHTML = 'SYNCING...';
+            btn.disabled = true;
+            
+            fetch('/api/force-sync')
+                .then(() => {
+                    btn.innerHTML = 'SUCCESS';
+                    setTimeout(() => { btn.innerHTML = 'REFRESH'; btn.disabled = false; }, 2000);
+                })
+                .catch(() => {
+                    btn.innerHTML = 'FAILED';
+                    setTimeout(() => { btn.innerHTML = 'REFRESH'; btn.disabled = false; }, 2000);
+                });
+        }
+
+
+        async function detectLocation() {
+            try {
+                if (!document.cookie.includes('codly_country')) {
+                    const response = await fetch('https://ipapi.co/json/');
+                    const data = await response.json();
+                    if (data.country_code) {
+                        document.cookie = `codly_country=${data.country_code}; path=/; max-age=31536000; SameSite=Lax`;
+                        window.location.reload();
+                    }
+                }
+            } catch (err) { }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateToggleButton(localStorage.getItem('codly-theme'));
+            if (localStorage.getItem('codly-vibe') === 'on') {
+                document.body.classList.add('vibe-active');
+                if(document.getElementById('vibe-btn')) document.getElementById('vibe-btn').innerHTML = 'VIBE ON';
+            }
+            detectLocation();
+        });
+    </script>
+</head>
+
+<body>
+    <header>
+        <div class="logo-section" onclick="window.location.href='/';">
+            <div class="live-pulsar"></div>
+            <h1 style="font-family: 'Outfit';">Tech<span>4</span>Today Hub</h1>
+            <span id="sync-status"
+                style="display: none; font-size: 0.6rem; color: #32d74b; font-weight: 900; letter-spacing: 0.1em; padding-left: 0.5rem; animation: pulse 1s infinite;">SYNCING...</span>
+        </div>
+
+        <div class="header-controls">
+            <button class="region-toggle-btn" onclick="forceSync();" style="background: rgba(50,215,75,0.1); color: #32d74b; border-color: rgba(50,215,75,0.2); font-weight: 900;">REFRESH</button>
+            <button class="region-toggle-btn {% if view_mode == 'global' %}region-global{% endif %}"
+                onclick="toggleViewMode();">{% if view_mode == 'local' %}INDIAN{% else %}GLOBAL{% endif %}</button>
+            <a href="/pulse-30" class="vibe-toggle"
+                style="background: var(--accent-blue); color: #fff; text-decoration: none; border: none;">PRIME 30</a>
+            <button id="vibe-btn" class="vibe-toggle" onclick="toggleVibe();">VIBE OFF</button>
+        </div>
+    </header>
+
+    <nav class="pill-nav-container">
+        <div class="pill-nav">
+            <a href="/?category=top" class="pill {% if category_filter == 'top' %}active{% endif %}">Top Stories</a>
+            <a href="/?category=ai-coding" class="pill {% if category_filter == 'ai-coding' %}active{% endif %}">🚀 AI &
+                Coding</a>
+            <a href="/?category=india-tech" class="pill {% if category_filter == 'india-tech' %}active{% endif %}">🇮🇳
+                India Tech</a>
+            <a href="/?category=devices" class="pill {% if category_filter == 'devices' %}active{% endif %}">📱
+                Devices</a>
+            <a href="/?category=discoveries" class="pill {% if category_filter == 'discoveries' %}active{% endif %}">🧪
+                Discoveries</a>
+            <a href="/?category=tools" class="pill {% if category_filter == 'tools' %}active{% endif %}">🛠️ Tools</a>
+            <a href="/?category=startups" class="pill {% if category_filter == 'startups' %}active{% endif %}">🦄 Startups</a>
+            <a href="/?category=tech-news" class="pill {% if category_filter == 'tech-news' %}active{% endif %}">📰 Tech News</a>
+        </div>
+    </nav>
+
+    <div class="discovery-radar-container">
+        <span class="discovery-label">📍 Trending in {% if view_mode == 'local' %}India{% else %}Global{% endif
+            %}:</span>
+        {% if hotspots %}
+        {% for spot in hotspots %}
+        <span class="hotspot-pill">
+            {{ spot.name }} <span>{{ spot.count }}</span>
+        </span>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+    <div id="discovery-root">
+    <!-- 🛰️ v15.5 AI DISCOVERY RADAR: MODELS & TOOLS -->
+    {% if radar_articles %}
+    <section class="radar-wrapper">
+        <div class="radar-header" onclick="toggleRadar(this);">
+            <div>
+                <h2>🛰️ ELITE DISCOVERY RADAR <span class="radar-toggle-icon">▼</span></h2>
+                <p>Real-time Foundational Models, Technical Tools & Startup Breakthroughs</p>
+            </div>
+            <a href="/?category=ai-coding" onclick="event.stopPropagation();" style="font-size: 0.7rem; color: var(--accent-blue); font-weight: 800; text-decoration: none; padding-bottom: 0.2rem;">EXPLORE RADAR →</a>
+        </div>
+        <div class="radar-scroller">
+            {% for article in radar_articles %}
+            <div class="radar-card" onclick="window.location.href='/news/{{ article.id }}'">
+                <div class="radar-img" style="background-image: url('{{ article.thumbnail }}');"></div>
+                <h3 class="radar-title">{{ article.title }}</h3>
+                <div class="radar-meta">
+                    <span class="radar-badge">{{ article.category|upper }}</span>
+                    <span>{{ article.time_ago }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <div class="main-content-wrapper">
+        <main class="main-feed-full">
+            <div class="bento-grid">
+                {% if articles %}
+                {% for article in articles %}
+                <article class="bento-card"
+                    onclick="window.location.href='{{ url_for('article_detail', news_id=article.id) }}';">
+                    <div class="card-header">
+                        <div class="source-info">
+                            <img src="https://icons.duckduckgo.com/ip3/{{ article.domain }}.ico"
+                                onerror="this.src='https://www.google.com/s2/favicons?domain={{ article.domain }}&sz=32';"
+                                class="source-icon">
+                            <span>{{ article.source }}</span>
+                        </div>
+                        <span class="vibe-badge">{{ article.sentiment | default('⚖️ Neutral') }}</span>
+                    </div>
+
+                    <div class="card-image" style="background-image: url('{{ article.thumbnail }}');"></div>
+
+                    <h2 class="article-title">{{ article.title }}</h2>
+
+                    <p class="summary-text standard-summary">{{ (article.summary[:120] ~ '...') if article.summary else 'Pulse extraction pending...' }}</p>
+                    <p class="summary-text vibe-summary" style="display: none;">{{ (article.vibe_summary[:120] ~ '...') if article.vibe_summary else ((article.summary[:120] ~ '...') if article.summary else 'Pulse extraction pending...') }}</p>
+
+                    <div class="card-footer">
+                        {% set cat = article.category %}
+                        <span
+                            class="cat-pill {% if 'India' in cat %}bg-india{% elif 'AI' in cat %}bg-ai{% elif 'Devices' in cat %}bg-devices{% elif 'Discoveries' in cat %}bg-discovery{% elif 'Tools' in cat %}bg-tools{% elif 'Startup' in cat %}bg-startup{% else %}bg-ai{% endif %}">
+                            {{ article.category }}
+                        </span>
+                        <div style="display: flex; gap: 0.8rem; align-items: center;">
+                            <span style="font-size: 0.7rem; font-weight: 800; color: var(--text-secondary); opacity: 0.5;">• {{ article.time_ago }}</span>
+                            <button class="share-btn" onclick="openShareModal(event, {{ article.id }}, '{{ article.title | replace("'", "") }}', '{{ article.thumbnail }}');" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; padding: 0.5rem; transition: 0.2s;">📤</button>
+                        </div>
+                        <span class="read-more">ANALYZE</span>
+                    </div>
+                </article>
+                {% endfor %}
+                {% else %}
+                <div style="text-align: center; padding: 10rem; width: 100%;">
+                    <p>No active pulses in this lens. <a href="/" style="color: var(--accent-blue);">Refresh Reality</a>
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+    </div>
+
+    <footer style="padding: 10rem 5%; border-top: 1px solid var(--border-google); text-align: center; opacity: 0.5;">
+        <div style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 1rem;">
+            Tech4Today | The No-BS Tech Hub v10.2 · 10m Optimized Sync
+        </div>
+        <div style="font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;">
+            <a href="/privacy" style="color: var(--text-primary); text-decoration: none; margin: 0 1rem; opacity: 0.8;">PRIVACY</a>
+            <a href="/legal" style="color: var(--text-primary); text-decoration: none; margin: 0 1rem; opacity: 0.8;">LEGAL</a>
+        </div>
+    </footer>
+
+    <!-- --- v12.0 SOCIAL SHARE MODAL --- -->
+    <div id="share-modal" class="modal-overlay" onclick="closeShareModal(event);">
+        <div class="modal-content" onclick="event.stopPropagation();">
+            <div class="modal-header">
+                <h3>Share Intelligence Card</h3>
+                <button class="close-modal" onclick="closeShareModal(event);">✕</button>
+            </div>
+            <div class="share-preview">
+                <div id="share-loader" class="loader-spinner"></div>
+                <img id="share-img-preview" src="" alt="Share Card Preview" style="display: none;">
+            </div>
+            <div class="share-options">
+                <button class="share-option-btn wh" onclick="shareToWhatsApp();">WhatsApp Link</button>
+                <button class="share-option-btn tw" onclick="shareToTwitter();">Post to X</button>
+                <button class="share-option-btn ig" style="background: var(--accent-blue); grid-column: span 2; font-size: 1rem; border: 2px solid #fff;" onclick="shareToNative();">🚀 SHARE FULL IMAGE CARD</button>
+                <button class="share-option-btn dl" onclick="downloadShareImg();">Save JPG</button>
+            </div>
+            <p id="share-status" style="font-size: 0.7rem; color: var(--text-secondary); text-align: center; margin-top: 1rem;"></p>
+            <p style="font-size: 0.65rem; color: var(--accent-blue); text-align: center; font-weight: 800; text-transform: uppercase; margin-top: 0.5rem; opacity: 0.9;">💡 Hint: Use the "🚀 SHARE FULL IMAGE" button to send the actual JPG to WhatsApp</p>
+        </div>
+    </div>
+
+    <script>
+        let currentShareData = { id: null, title: '', thumb: '' };
+
+        function openShareModal(e, id, title, thumb) {
+            e.stopPropagation();
+            currentShareData = { id, title, thumb };
+            const modal = document.getElementById('share-modal');
+            const preview = document.getElementById('share-img-preview');
+            const loader = document.getElementById('share-loader');
+            const status = document.getElementById('share-status');
+            
+            modal.style.display = 'flex';
+            preview.style.display = 'none';
+            loader.style.display = 'block';
+            status.innerText = "Generating Intelligence Card...";
+
+            const imgUrl = `/api/share-image/${id}`;
+            const img = new Image();
+            img.onload = () => {
+                preview.src = imgUrl;
+                preview.style.display = 'block';
+                loader.style.display = 'none';
+                status.innerText = "Ready to share";
+            };
+            img.src = imgUrl;
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeShareModal();
+        });
+
+        function closeShareModal() {
+            const modal = document.getElementById('share-modal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        async function shareToNative() {
+            const imgUrl = `/api/share-image/${currentShareData.id}`;
+            const canonicalUrl = `${window.location.origin}/news/${currentShareData.id}`;
+            const status = document.getElementById('share-status');
+            
+            try {
+                if (navigator.canShare && navigator.share) {
+                    status.innerText = "Preparing High-Fidelity Card...";
+                    const response = await fetch(imgUrl);
+                    const blob = await response.blob();
+                    const file = new File([blob], `tech4today_pulse_${currentShareData.id}.jpg`, { type: 'image/jpeg' });
+                    
+                    await navigator.share({
+                        files: [file],
+                        title: currentShareData.title,
+                        text: `${currentShareData.title}\n\nTrack this pulse: ${canonicalUrl}`,
+                        url: canonicalUrl
+                    });
+                    status.innerText = "Shared successfully!";
+                } else {
+                    status.innerText = "Direct sharing not supported. Use WhatsApp Link or Download.";
+                }
+            } catch (err) {
+                console.error(err);
+                status.innerText = "Sharing cancelled or failed.";
+            }
+        }
+
+        function shareToWhatsApp() {
+            const url = window.location.origin + '/news/' + currentShareData.id;
+            const text = encodeURIComponent(currentShareData.title + "\n\nTrack this pulse: " + url);
+            window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+        }
+
+        function shareToTwitter() {
+            const url = window.location.origin + '/news/' + currentShareData.id;
+            const text = encodeURIComponent(currentShareData.title + " @Tech4Today #TechIntelligence");
+            window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${text}`, '_blank');
+        }
+
+        function downloadShareImg() {
+            const link = document.createElement('a');
+            link.href = `/api/share-image/${currentShareData.id}`;
+            link.download = `tech4today_pulse_${currentShareData.id}.jpg`;
+            link.click();
+        }
+
+        function toggleRadar(header) {
+            const wrapper = header.closest('.radar-wrapper');
+            wrapper.classList.toggle('expanded');
+        }
     </script>
 </body>
 </html>
